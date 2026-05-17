@@ -29,10 +29,10 @@
       }
     }
 
-    .chip.active {
-      background: #10b981;
-      color: black;
-      border-color: #10b981;
+    .toggle-active {
+      background: #10b981 !important;
+      border-color: #10b981 !important;
+      color: black !important;
     }
   </style>
 </head>
@@ -56,6 +56,7 @@
     <section class="bg-zinc-900 border border-zinc-800 rounded-[30px] p-5 mb-5">
 
       <div class="flex items-center justify-between mb-5">
+
         <div>
           <p class="text-zinc-500 text-sm">
             Semana actual
@@ -65,24 +66,31 @@
             id="semanaTexto"
             class="text-2xl font-bold"
           >
-            Semana del 11 al 17
+            Semana
           </h2>
         </div>
 
         <div class="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+
       </div>
 
-      <!-- DIAS -->
-      <div class="grid grid-cols-7 gap-2 mb-3" id="diasSemana">
+      <!-- LABELS -->
+      <div
+        id="diasSemana"
+        class="grid grid-cols-7 gap-2 mb-3"
+      >
       </div>
 
-      <!-- NUMEROS -->
-      <div class="grid grid-cols-7 gap-2" id="calendar">
+      <!-- CALENDAR -->
+      <div
+        id="calendar"
+        class="grid grid-cols-7 gap-2"
+      >
       </div>
 
     </section>
 
-    <!-- SELECTOR -->
+    <!-- TURNO -->
     <section class="bg-zinc-900 border border-zinc-800 rounded-[30px] p-5 mb-5">
 
       <p class="text-zinc-400 uppercase tracking-wide text-sm mb-4">
@@ -108,6 +116,13 @@
         <option value="noche">🌙 Turno Noche</option>
       </select>
 
+      <p
+        id="infoNocturna"
+        class="hidden text-sm text-violet-400 mt-3"
+      >
+        + adicional nocturno aplicado automáticamente
+      </p>
+
     </section>
 
     <!-- VARIABLES -->
@@ -126,8 +141,9 @@
     >
 
       <div class="flex items-center justify-between mb-5">
+
         <h3 class="text-2xl font-bold">
-          Variables de la semana
+          Semana laboral
         </h3>
 
         <button
@@ -143,11 +159,15 @@
             text-black
           "
         >
-          Calcular sueldo
+          Calcular
         </button>
+
       </div>
 
-      <div id="variablesSemana" class="space-y-5">
+      <div
+        id="variablesSemana"
+        class="space-y-4"
+      >
       </div>
 
     </section>
@@ -170,10 +190,7 @@
         Sueldo bruto estimado
       </p>
 
-      <h2
-        id="sueldo"
-        class="text-5xl font-bold text-emerald-400"
-      >
+      <h2 class="text-5xl font-bold text-emerald-400">
         $1.842.000
       </h2>
 
@@ -207,7 +224,8 @@
 
   <script>
 
-    const diasLabels = ["D", "L", "M", "X", "J", "V", "S"]
+    const turnoSelect =
+      document.getElementById("turno")
 
     const diasSemana =
       document.getElementById("diasSemana")
@@ -218,108 +236,134 @@
     const semanaTexto =
       document.getElementById("semanaTexto")
 
-    const hoy = new Date()
-
-    const inicioSemana = new Date(hoy)
-
-    inicioSemana.setDate(
-      hoy.getDate() - hoy.getDay()
-    )
-
-    const finSemana = new Date(inicioSemana)
-
-    finSemana.setDate(
-      inicioSemana.getDate() + 6
-    )
-
-    semanaTexto.innerText =
-      `Semana del ${inicioSemana.getDate()} al ${finSemana.getDate()}`
-
-    diasLabels.forEach((dia) => {
-
-      const el = document.createElement("div")
-
-      el.className =
-        "text-center text-zinc-500 text-sm font-medium"
-
-      el.innerText = dia
-
-      diasSemana.appendChild(el)
-
-    })
-
-    for (let i = 0; i < 7; i++) {
-
-      const fecha = new Date(inicioSemana)
-
-      fecha.setDate(
-        inicioSemana.getDate() + i
-      )
-
-      const esHoy =
-        fecha.toDateString() === hoy.toDateString()
-
-      const btn =
-        document.createElement("button")
-
-      btn.className = `
-        aspect-square
-        rounded-2xl
-        transition
-        flex
-        items-center
-        justify-center
-        text-lg
-        ${esHoy
-          ? "bg-emerald-500 text-black font-bold scale-105"
-          : "bg-zinc-800 hover:bg-zinc-700"}
-      `
-
-      btn.innerText = fecha.getDate()
-
-      calendar.appendChild(btn)
-    }
-
-    const turno =
-      document.getElementById("turno")
-
     const variablesContainer =
       document.getElementById("variablesContainer")
 
     const variablesSemana =
       document.getElementById("variablesSemana")
 
-    turno.addEventListener("change", () => {
+    const infoNocturna =
+      document.getElementById("infoNocturna")
 
-      if (!turno.value) {
-        variablesContainer.classList.add("hidden")
-        return
+    const hoy = new Date()
+
+    function renderSemana(turno) {
+
+      diasSemana.innerHTML = ""
+      calendar.innerHTML = ""
+
+      let labels
+
+      if (turno === "noche") {
+        labels = ["D", "L", "M", "X", "J", "V", "S"]
+      } else {
+        labels = ["L", "M", "X", "J", "V", "S", "D"]
       }
 
-      variablesContainer.classList.remove("hidden")
+      let inicioSemana = new Date(hoy)
 
-      variablesSemana.innerHTML = ""
+      if (turno === "noche") {
+
+        inicioSemana.setDate(
+          hoy.getDate() - hoy.getDay()
+        )
+
+      } else {
+
+        const day = hoy.getDay()
+
+        const diff =
+          day === 0 ? -6 : 1 - day
+
+        inicioSemana.setDate(
+          hoy.getDate() + diff
+        )
+
+      }
+
+      const finSemana =
+        new Date(inicioSemana)
+
+      finSemana.setDate(
+        inicioSemana.getDate() + 6
+      )
+
+      semanaTexto.innerText =
+        `Semana del ${inicioSemana.getDate()} al ${finSemana.getDate()}`
+
+      labels.forEach((label) => {
+
+        const el =
+          document.createElement("div")
+
+        el.className =
+          "text-center text-zinc-500 text-sm font-medium"
+
+        el.innerText = label
+
+        diasSemana.appendChild(el)
+
+      })
 
       for (let i = 0; i < 7; i++) {
 
-        const fecha = new Date(inicioSemana)
+        const fecha =
+          new Date(inicioSemana)
 
         fecha.setDate(
           inicioSemana.getDate() + i
         )
 
-        const dia =
+        const esHoy =
+          fecha.toDateString() === hoy.toDateString()
+
+        const btn =
+          document.createElement("button")
+
+        btn.className = `
+          aspect-square
+          rounded-2xl
+          transition
+          flex
+          items-center
+          justify-center
+          text-lg
+          ${esHoy
+            ? "bg-emerald-500 text-black font-bold scale-105"
+            : "bg-zinc-800 hover:bg-zinc-700"}
+        `
+
+        btn.innerText =
+          fecha.getDate()
+
+        calendar.appendChild(btn)
+
+      }
+
+      variablesSemana.innerHTML = ""
+
+      for (let i = 0; i < 7; i++) {
+
+        const fecha =
+          new Date(inicioSemana)
+
+        fecha.setDate(
+          inicioSemana.getDate() + i
+        )
+
+        const card =
           document.createElement("div")
 
-        dia.className =
+        card.className =
           "bg-zinc-800 rounded-2xl p-4"
 
-        dia.innerHTML = `
+        card.innerHTML = `
+
           <div class="flex items-center justify-between mb-4">
 
             <div>
               <p class="text-zinc-500 text-sm">
-                ${diasLabels[i]}
+                ${labels[i]}
               </p>
 
               <h4 class="text-xl font-bold">
@@ -327,48 +371,155 @@
               </h4>
             </div>
 
-            <div class="text-sm text-zinc-400 capitalize">
-              ${turno.value}
+            <div class="
+              px-3
+              py-1
+              rounded-full
+              text-sm
+              bg-zinc-700
+              capitalize
+            ">
+              ${turno}
             </div>
 
           </div>
 
-          <div class="flex flex-wrap gap-2">
+          <div class="space-y-4">
 
-            <button class="chip border border-zinc-700 rounded-full px-3 py-2 text-sm transition">
-              ➕ Horas plus
-            </button>
+            <div>
 
-            <button class="chip border border-zinc-700 rounded-full px-3 py-2 text-sm transition">
-              ⭐ Feriado
-            </button>
+              <div class="flex justify-between mb-2">
+                <span class="text-sm text-zinc-300">
+                  Horas plus
+                </span>
 
-            <button class="chip border border-zinc-700 rounded-full px-3 py-2 text-sm transition">
-              🌙 Nocturnas
-            </button>
+                <span class="text-zinc-500 text-sm">
+                  h
+                </span>
+              </div>
 
-            <button class="chip border border-zinc-700 rounded-full px-3 py-2 text-sm transition">
-              🤒 Enfermedad
+              <input
+                type="number"
+                min="0"
+                value="0"
+                class="
+                  w-full
+                  bg-zinc-900
+                  border
+                  border-zinc-700
+                  rounded-xl
+                  p-3
+                  outline-none
+                "
+              />
+
+            </div>
+
+            <div>
+
+              <div class="flex justify-between mb-2">
+                <span class="text-sm text-zinc-300">
+                  Retiro anticipado
+                </span>
+
+                <span class="text-zinc-500 text-sm">
+                  h
+                </span>
+              </div>
+
+              <input
+                type="number"
+                min="0"
+                value="0"
+                class="
+                  w-full
+                  bg-zinc-900
+                  border
+                  border-zinc-700
+                  rounded-xl
+                  p-3
+                  outline-none
+                "
+              />
+
+            </div>
+
+            <button
+              class="
+                feriadoBtn
+                w-full
+                border
+                border-zinc-700
+                rounded-xl
+                p-3
+                transition
+              "
+            >
+              ⭐ Marcar feriado
             </button>
 
           </div>
         `
 
-        variablesSemana.appendChild(dia)
+        variablesSemana.appendChild(card)
+
       }
 
-      const chips =
-        document.querySelectorAll(".chip")
+      const feriados =
+        document.querySelectorAll(".feriadoBtn")
 
-      chips.forEach((chip) => {
+      feriados.forEach((btn) => {
 
-        chip.addEventListener("click", () => {
+        btn.addEventListener("click", () => {
 
-          chip.classList.toggle("active")
+          btn.classList.toggle("toggle-active")
+
+          if (
+            btn.innerText.includes("Marcar")
+          ) {
+
+            btn.innerText =
+              "⭐ Feriado aplicado (8h)"
+
+          } else {
+
+            btn.innerText =
+              "⭐ Marcar feriado"
+
+          }
 
         })
 
       })
+
+    }
+
+    turnoSelect.addEventListener("change", () => {
+
+      const turno =
+        turnoSelect.value
+
+      if (!turno) {
+
+        variablesContainer.classList.add("hidden")
+
+        return
+
+      }
+
+      variablesContainer.classList.remove("hidden")
+
+      if (turno === "noche") {
+
+        infoNocturna.classList.remove("hidden")
+
+      } else {
+
+        infoNocturna.classList.add("hidden")
+
+      }
+
+      renderSemana(turno)
 
     })
 
@@ -378,18 +529,26 @@
     const resultado =
       document.getElementById("resultado")
 
-    calcularBtn.addEventListener("click", () => {
+    document.addEventListener("click", (e) => {
 
-      calcularBtn.innerText = "Calculando..."
+      if (
+        e.target &&
+        e.target.id === "calcularBtn"
+      ) {
 
-      setTimeout(() => {
+        e.target.innerText =
+          "Calculando..."
 
-        resultado.classList.remove("hidden")
+        setTimeout(() => {
 
-        calcularBtn.innerText =
-          "Calcular sueldo"
+          resultado.classList.remove("hidden")
 
-      }, 1000)
+          e.target.innerText =
+            "Calcular"
+
+        }, 900)
+
+      }
 
     })
 
