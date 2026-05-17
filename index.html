@@ -51,6 +51,7 @@
       </p>
     </header>
 
+    <!-- CALENDARIO -->
     <section class="bg-zinc-900 border border-zinc-800 rounded-[30px] p-5 mb-5">
 
       <div class="flex items-center justify-between mb-5">
@@ -75,17 +76,16 @@
       <div
         id="diasSemana"
         class="grid grid-cols-7 gap-2 mb-3"
-      >
-      </div>
+      ></div>
 
       <div
         id="calendar"
         class="grid grid-cols-7 gap-2"
-      >
-      </div>
+      ></div>
 
     </section>
 
+    <!-- TURNO -->
     <section class="bg-zinc-900 border border-zinc-800 rounded-[30px] p-5 mb-5">
 
       <p class="text-zinc-400 uppercase tracking-wide text-sm mb-4">
@@ -120,6 +120,7 @@
 
     </section>
 
+    <!-- VARIABLES -->
     <section
       id="variablesContainer"
       class="
@@ -161,11 +162,11 @@
       <div
         id="variablesSemana"
         class="space-y-4"
-      >
-      </div>
+      ></div>
 
     </section>
 
+    <!-- RESULTADO -->
     <section
       id="resultado"
       class="
@@ -205,8 +206,13 @@
         </div>
 
         <div class="flex justify-between">
-          <span>Feriados</span>
-          <span>1</span>
+          <span>Horas enfermedad</span>
+          <span>8h</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span>Horas feriado</span>
+          <span>8h</span>
         </div>
 
       </div>
@@ -461,6 +467,35 @@
 
             </div>
 
+            <div>
+
+              <div class="flex justify-between mb-2">
+                <span class="text-sm text-zinc-300">
+                  Horas enfermedad
+                </span>
+
+                <span class="text-zinc-500 text-sm">
+                  h
+                </span>
+              </div>
+
+              <input
+                type="number"
+                min="0"
+                value="0"
+                class="
+                  w-full
+                  bg-zinc-900
+                  border
+                  border-zinc-700
+                  rounded-xl
+                  p-3
+                  outline-none
+                "
+              />
+
+            </div>
+
             <button
               class="
                 feriadoBtn
@@ -472,7 +507,7 @@
                 transition
               "
             >
-              ⭐ Marcar feriado (8h)
+              ⭐ Aplicar feriado pago (8h)
             </button>
 
           </div>
@@ -492,16 +527,16 @@
           btn.classList.toggle("toggle-active")
 
           if (
-            btn.innerText.includes("Marcar")
+            btn.innerText.includes("Aplicar")
           ) {
 
             btn.innerText =
-              "⭐ Feriado aplicado"
+              "⭐ Feriado pago aplicado"
 
           } else {
 
             btn.innerText =
-              "⭐ Marcar feriado (8h)"
+              "⭐ Aplicar feriado pago (8h)"
 
           }
 
