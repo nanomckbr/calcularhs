@@ -1,133 +1,204 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Control de Horas</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background: #000;
+    }
+
+    .fade-in {
+      animation: fade .25s ease;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .chip.active {
+      background: #10b981;
+      color: black;
+      border-color: #10b981;
+    }
+  </style>
 </head>
 
-<body class="bg-black text-white min-h-screen">
+<body class="text-white min-h-screen">
 
-  <main class="max-w-md mx-auto p-5">
+  <main class="max-w-md mx-auto px-4 py-6">
 
     <!-- HEADER -->
     <header class="mb-6">
-      <h1 class="text-5xl font-bold tracking-tight">
+      <h1 class="text-4xl font-bold tracking-tight">
         Control de Horas
       </h1>
 
-      <p class="text-zinc-400 text-lg mt-2">
-        Gestión laboral y liquidación mensual
+      <p class="text-zinc-400 mt-1">
+        Gestión semanal de turnos
       </p>
     </header>
 
-    <!-- CARD PRINCIPAL -->
-    <section class="bg-zinc-900 border border-zinc-800 rounded-[32px] p-5">
+    <!-- CALENDARIO -->
+    <section class="bg-zinc-900 border border-zinc-800 rounded-[30px] p-5 mb-5">
 
-      <!-- SEMANA -->
       <div class="flex items-center justify-between mb-5">
         <div>
           <p class="text-zinc-500 text-sm">
             Semana actual
           </p>
 
-          <h2 class="text-2xl font-bold" id="semanaTexto">
-            Semana del 11 al 18
+          <h2
+            id="semanaTexto"
+            class="text-2xl font-bold"
+          >
+            Semana del 11 al 17
           </h2>
         </div>
 
-        <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
+        <div class="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
       </div>
 
-      <!-- CALENDARIO -->
-      <div class="grid grid-cols-7 gap-2 mb-6" id="calendar">
+      <!-- DIAS -->
+      <div class="grid grid-cols-7 gap-2 mb-3" id="diasSemana">
       </div>
 
-      <!-- TURNO -->
-      <div class="mb-6">
-        <p class="text-zinc-400 mb-3 text-sm uppercase tracking-wide">
-          Turno a trabajar
-        </p>
-
-        <select
-          id="turno"
-          class="
-            w-full
-            bg-zinc-800
-            border
-            border-zinc-700
-            rounded-2xl
-            p-4
-            text-lg
-            outline-none
-          "
-        >
-          <option value="">Seleccionar turno</option>
-          <option value="mañana">🌅 Turno Mañana</option>
-          <option value="tarde">🌇 Turno Tarde</option>
-          <option value="noche">🌙 Turno Noche</option>
-        </select>
+      <!-- NUMEROS -->
+      <div class="grid grid-cols-7 gap-2" id="calendar">
       </div>
 
-      <!-- BOTON -->
-      <button
-        id="calcularBtn"
+    </section>
+
+    <!-- SELECTOR -->
+    <section class="bg-zinc-900 border border-zinc-800 rounded-[30px] p-5 mb-5">
+
+      <p class="text-zinc-400 uppercase tracking-wide text-sm mb-4">
+        Turno a trabajar
+      </p>
+
+      <select
+        id="turno"
         class="
           w-full
-          bg-emerald-500
-          hover:bg-emerald-400
-          active:scale-[0.98]
-          transition
-          rounded-2xl
-          p-4
-          font-bold
-          text-lg
-          mb-5
-        "
-      >
-        Calcular sueldo
-      </button>
-
-      <!-- RESULTADO -->
-      <div
-        id="resultado"
-        class="
-          hidden
           bg-zinc-800
-          rounded-2xl
-          p-5
           border
           border-zinc-700
+          rounded-2xl
+          p-4
+          text-lg
+          outline-none
         "
       >
-        <p class="text-zinc-400 text-sm mb-2">
-          Sueldo bruto estimado
-        </p>
+        <option value="">Seleccionar turno</option>
+        <option value="mañana">🌅 Turno Mañana</option>
+        <option value="tarde">🌇 Turno Tarde</option>
+        <option value="noche">🌙 Turno Noche</option>
+      </select>
 
-        <h3
-          id="sueldo"
-          class="text-5xl font-bold text-emerald-400"
-        >
-          $0
+    </section>
+
+    <!-- VARIABLES -->
+    <section
+      id="variablesContainer"
+      class="
+        hidden
+        fade-in
+        bg-zinc-900
+        border
+        border-zinc-800
+        rounded-[30px]
+        p-5
+        mb-5
+      "
+    >
+
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-2xl font-bold">
+          Variables de la semana
         </h3>
 
-        <div class="mt-5 space-y-2 text-zinc-300">
-          <div class="flex justify-between">
-            <span>Horas normales</span>
-            <span>192h</span>
-          </div>
+        <button
+          id="calcularBtn"
+          class="
+            bg-emerald-500
+            hover:bg-emerald-400
+            transition
+            px-4
+            py-2
+            rounded-xl
+            font-semibold
+            text-black
+          "
+        >
+          Calcular sueldo
+        </button>
+      </div>
 
-          <div class="flex justify-between">
-            <span>Horas nocturnas</span>
-            <span>24h</span>
-          </div>
+      <div id="variablesSemana" class="space-y-5">
+      </div>
 
-          <div class="flex justify-between">
-            <span>Horas extra</span>
-            <span>10h</span>
-          </div>
+    </section>
+
+    <!-- RESULTADO -->
+    <section
+      id="resultado"
+      class="
+        hidden
+        fade-in
+        bg-zinc-900
+        border
+        border-zinc-800
+        rounded-[30px]
+        p-5
+      "
+    >
+
+      <p class="text-zinc-400 text-sm mb-2">
+        Sueldo bruto estimado
+      </p>
+
+      <h2
+        id="sueldo"
+        class="text-5xl font-bold text-emerald-400"
+      >
+        $1.842.000
+      </h2>
+
+      <div class="mt-6 space-y-3 text-zinc-300">
+
+        <div class="flex justify-between">
+          <span>Horas normales</span>
+          <span>192h</span>
         </div>
+
+        <div class="flex justify-between">
+          <span>Horas nocturnas</span>
+          <span>24h</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span>Horas plus</span>
+          <span>16h</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span>Feriados</span>
+          <span>1</span>
+        </div>
+
       </div>
 
     </section>
@@ -135,59 +206,171 @@
   </main>
 
   <script>
-    const calendar = document.getElementById("calendar")
-    const semanaTexto = document.getElementById("semanaTexto")
+
+    const diasLabels = ["D", "L", "M", "X", "J", "V", "S"]
+
+    const diasSemana =
+      document.getElementById("diasSemana")
+
+    const calendar =
+      document.getElementById("calendar")
+
+    const semanaTexto =
+      document.getElementById("semanaTexto")
 
     const hoy = new Date()
 
     const inicioSemana = new Date(hoy)
-    inicioSemana.setDate(hoy.getDate() - hoy.getDay() + 1)
+
+    inicioSemana.setDate(
+      hoy.getDate() - hoy.getDay()
+    )
 
     const finSemana = new Date(inicioSemana)
-    finSemana.setDate(inicioSemana.getDate() + 6)
+
+    finSemana.setDate(
+      inicioSemana.getDate() + 6
+    )
 
     semanaTexto.innerText =
       `Semana del ${inicioSemana.getDate()} al ${finSemana.getDate()}`
 
-    const dias = ["L", "M", "X", "J", "V", "S", "D"]
+    diasLabels.forEach((dia) => {
 
-    dias.forEach((dia) => {
-      const label = document.createElement("div")
+      const el = document.createElement("div")
 
-      label.className =
+      el.className =
         "text-center text-zinc-500 text-sm font-medium"
 
-      label.innerText = dia
+      el.innerText = dia
 
-      calendar.appendChild(label)
+      diasSemana.appendChild(el)
+
     })
 
     for (let i = 0; i < 7; i++) {
-      const fecha = new Date(inicioSemana)
-      fecha.setDate(inicioSemana.getDate() + i)
 
-      const day = document.createElement("button")
+      const fecha = new Date(inicioSemana)
+
+      fecha.setDate(
+        inicioSemana.getDate() + i
+      )
 
       const esHoy =
         fecha.toDateString() === hoy.toDateString()
 
-      day.className = `
+      const btn =
+        document.createElement("button")
+
+      btn.className = `
         aspect-square
         rounded-2xl
+        transition
         flex
         items-center
         justify-center
         text-lg
-        transition
         ${esHoy
           ? "bg-emerald-500 text-black font-bold scale-105"
           : "bg-zinc-800 hover:bg-zinc-700"}
       `
 
-      day.innerText = fecha.getDate()
+      btn.innerText = fecha.getDate()
 
-      calendar.appendChild(day)
+      calendar.appendChild(btn)
     }
+
+    const turno =
+      document.getElementById("turno")
+
+    const variablesContainer =
+      document.getElementById("variablesContainer")
+
+    const variablesSemana =
+      document.getElementById("variablesSemana")
+
+    turno.addEventListener("change", () => {
+
+      if (!turno.value) {
+        variablesContainer.classList.add("hidden")
+        return
+      }
+
+      variablesContainer.classList.remove("hidden")
+
+      variablesSemana.innerHTML = ""
+
+      for (let i = 0; i < 7; i++) {
+
+        const fecha = new Date(inicioSemana)
+
+        fecha.setDate(
+          inicioSemana.getDate() + i
+        )
+
+        const dia =
+          document.createElement("div")
+
+        dia.className =
+          "bg-zinc-800 rounded-2xl p-4"
+
+        dia.innerHTML = `
+          <div class="flex items-center justify-between mb-4">
+
+            <div>
+              <p class="text-zinc-500 text-sm">
+                ${diasLabels[i]}
+              </p>
+
+              <h4 class="text-xl font-bold">
+                ${fecha.getDate()}
+              </h4>
+            </div>
+
+            <div class="text-sm text-zinc-400 capitalize">
+              ${turno.value}
+            </div>
+
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+
+            <button class="chip border border-zinc-700 rounded-full px-3 py-2 text-sm transition">
+              ➕ Horas plus
+            </button>
+
+            <button class="chip border border-zinc-700 rounded-full px-3 py-2 text-sm transition">
+              ⭐ Feriado
+            </button>
+
+            <button class="chip border border-zinc-700 rounded-full px-3 py-2 text-sm transition">
+              🌙 Nocturnas
+            </button>
+
+            <button class="chip border border-zinc-700 rounded-full px-3 py-2 text-sm transition">
+              🤒 Enfermedad
+            </button>
+
+          </div>
+        `
+
+        variablesSemana.appendChild(dia)
+      }
+
+      const chips =
+        document.querySelectorAll(".chip")
+
+      chips.forEach((chip) => {
+
+        chip.addEventListener("click", () => {
+
+          chip.classList.toggle("active")
+
+        })
+
+      })
+
+    })
 
     const calcularBtn =
       document.getElementById("calcularBtn")
@@ -195,20 +378,21 @@
     const resultado =
       document.getElementById("resultado")
 
-    const sueldo =
-      document.getElementById("sueldo")
-
     calcularBtn.addEventListener("click", () => {
+
       calcularBtn.innerText = "Calculando..."
 
       setTimeout(() => {
+
         resultado.classList.remove("hidden")
 
-        sueldo.innerText = "$1.842.000"
+        calcularBtn.innerText =
+          "Calcular sueldo"
 
-        calcularBtn.innerText = "Calcular sueldo"
       }, 1000)
+
     })
+
   </script>
 
 </body>
