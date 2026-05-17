@@ -3,173 +3,212 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Control de Turnos</title>
+  <title>Control de Horas</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-zinc-950 text-white p-6">
 
-  <div class="max-w-4xl mx-auto">
+<body class="bg-black text-white min-h-screen">
 
-    <!-- Header -->
-    <header class="mb-8">
-      <h1 class="text-4xl font-bold tracking-tight">
-        Control de Turnos
+  <main class="max-w-md mx-auto p-5">
+
+    <!-- HEADER -->
+    <header class="mb-6">
+      <h1 class="text-5xl font-bold tracking-tight">
+        Control de Horas
       </h1>
 
-      <p class="text-zinc-400 mt-2">
+      <p class="text-zinc-400 text-lg mt-2">
         Gestión laboral y liquidación mensual
       </p>
     </header>
 
-    <!-- Liquidación actual -->
-    <section class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 mb-6">
-      <div class="flex items-center justify-between flex-wrap gap-4">
+    <!-- CARD PRINCIPAL -->
+    <section class="bg-zinc-900 border border-zinc-800 rounded-[32px] p-5">
+
+      <!-- SEMANA -->
+      <div class="flex items-center justify-between mb-5">
         <div>
-          <p class="text-zinc-400 text-sm">
-            Liquidación actual
+          <p class="text-zinc-500 text-sm">
+            Semana actual
           </p>
 
-          <h2 id="periodo" class="text-2xl font-semibold mt-1">
-            -
+          <h2 class="text-2xl font-bold" id="semanaTexto">
+            Semana del 11 al 18
           </h2>
         </div>
 
-        <div class="text-right">
-          <p class="text-zinc-400 text-sm">
-            Bruto estimado
-          </p>
-
-          <p class="text-3xl font-bold text-emerald-400">
-            $0
-          </p>
-        </div>
+        <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
       </div>
 
-      <!-- Progress -->
-      <div class="mt-6">
-        <div class="w-full h-3 bg-zinc-800 rounded-full overflow-hidden">
-          <div class="h-full w-[45%] bg-emerald-500 rounded-full"></div>
-        </div>
+      <!-- CALENDARIO -->
+      <div class="grid grid-cols-7 gap-2 mb-6" id="calendar">
+      </div>
 
-        <p class="text-sm text-zinc-500 mt-2">
-          45% del período completado
+      <!-- TURNO -->
+      <div class="mb-6">
+        <p class="text-zinc-400 mb-3 text-sm uppercase tracking-wide">
+          Turno a trabajar
         </p>
-      </div>
-    </section>
 
-    <!-- Resumen -->
-    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
-        <p class="text-zinc-400 text-sm">Horas normales</p>
-        <h3 class="text-3xl font-bold mt-2">0h</h3>
-      </div>
-
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
-        <p class="text-zinc-400 text-sm">Horas nocturnas</p>
-        <h3 class="text-3xl font-bold mt-2">0h</h3>
-      </div>
-
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
-        <p class="text-zinc-400 text-sm">Horas extra</p>
-        <h3 class="text-3xl font-bold mt-2">0h</h3>
-      </div>
-
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
-        <p class="text-zinc-400 text-sm">Feriados</p>
-        <h3 class="text-3xl font-bold mt-2">0</h3>
+        <select
+          id="turno"
+          class="
+            w-full
+            bg-zinc-800
+            border
+            border-zinc-700
+            rounded-2xl
+            p-4
+            text-lg
+            outline-none
+          "
+        >
+          <option value="">Seleccionar turno</option>
+          <option value="mañana">🌅 Turno Mañana</option>
+          <option value="tarde">🌇 Turno Tarde</option>
+          <option value="noche">🌙 Turno Noche</option>
+        </select>
       </div>
 
-    </section>
-
-    <!-- Acciones -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-
-      <button class="bg-sky-500 rounded-3xl p-6 hover:scale-[1.02] active:scale-[0.98] transition text-left">
-        <div class="text-4xl mb-4">🌅</div>
-        <h3 class="text-2xl font-bold">Turno Mañana</h3>
+      <!-- BOTON -->
+      <button
+        id="calcularBtn"
+        class="
+          w-full
+          bg-emerald-500
+          hover:bg-emerald-400
+          active:scale-[0.98]
+          transition
+          rounded-2xl
+          p-4
+          font-bold
+          text-lg
+          mb-5
+        "
+      >
+        Calcular sueldo
       </button>
 
-      <button class="bg-orange-500 rounded-3xl p-6 hover:scale-[1.02] active:scale-[0.98] transition text-left">
-        <div class="text-4xl mb-4">🌇</div>
-        <h3 class="text-2xl font-bold">Turno Tarde</h3>
-      </button>
+      <!-- RESULTADO -->
+      <div
+        id="resultado"
+        class="
+          hidden
+          bg-zinc-800
+          rounded-2xl
+          p-5
+          border
+          border-zinc-700
+        "
+      >
+        <p class="text-zinc-400 text-sm mb-2">
+          Sueldo bruto estimado
+        </p>
 
-      <button class="bg-violet-500 rounded-3xl p-6 hover:scale-[1.02] active:scale-[0.98] transition text-left">
-        <div class="text-4xl mb-4">🌙</div>
-        <h3 class="text-2xl font-bold">Turno Noche</h3>
-      </button>
-
-    </section>
-
-    <!-- Calendario -->
-    <section class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-2xl font-semibold">
-          Calendario
+        <h3
+          id="sueldo"
+          class="text-5xl font-bold text-emerald-400"
+        >
+          $0
         </h3>
 
-        <button class="bg-zinc-800 hover:bg-zinc-700 transition px-4 py-2 rounded-xl">
-          Crear semana
-        </button>
+        <div class="mt-5 space-y-2 text-zinc-300">
+          <div class="flex justify-between">
+            <span>Horas normales</span>
+            <span>192h</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span>Horas nocturnas</span>
+            <span>24h</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span>Horas extra</span>
+            <span>10h</span>
+          </div>
+        </div>
       </div>
 
-      <div class="grid grid-cols-7 gap-3" id="calendar">
-      </div>
     </section>
 
-  </div>
+  </main>
 
   <script>
+    const calendar = document.getElementById("calendar")
+    const semanaTexto = document.getElementById("semanaTexto")
+
     const hoy = new Date()
 
-    const year = hoy.getFullYear()
-    const month = hoy.getMonth()
+    const inicioSemana = new Date(hoy)
+    inicioSemana.setDate(hoy.getDate() - hoy.getDay() + 1)
 
-    const inicio =
-      hoy.getDate() >= 21
-        ? new Date(year, month, 21)
-        : new Date(year, month - 1, 21)
+    const finSemana = new Date(inicioSemana)
+    finSemana.setDate(inicioSemana.getDate() + 6)
 
-    const fin =
-      hoy.getDate() >= 21
-        ? new Date(year, month + 1, 20)
-        : new Date(year, month, 20)
-
-    document.getElementById("periodo").innerText =
-      inicio.toLocaleDateString("es-AR") +
-      " → " +
-      fin.toLocaleDateString("es-AR")
+    semanaTexto.innerText =
+      `Semana del ${inicioSemana.getDate()} al ${finSemana.getDate()}`
 
     const dias = ["L", "M", "X", "J", "V", "S", "D"]
-    const calendar = document.getElementById("calendar")
 
     dias.forEach((dia) => {
-      const el = document.createElement("div")
-      el.className = "text-center text-zinc-500 font-medium"
-      el.innerText = dia
-      calendar.appendChild(el)
+      const label = document.createElement("div")
+
+      label.className =
+        "text-center text-zinc-500 text-sm font-medium"
+
+      label.innerText = dia
+
+      calendar.appendChild(label)
     })
 
-    for (let i = 1; i <= 35; i++) {
-      const btn = document.createElement("button")
+    for (let i = 0; i < 7; i++) {
+      const fecha = new Date(inicioSemana)
+      fecha.setDate(inicioSemana.getDate() + i)
 
-      btn.className = `
+      const day = document.createElement("button")
+
+      const esHoy =
+        fecha.toDateString() === hoy.toDateString()
+
+      day.className = `
         aspect-square
         rounded-2xl
-        bg-zinc-800
-        hover:bg-zinc-700
-        transition
         flex
         items-center
         justify-center
-        text-sm
+        text-lg
+        transition
+        ${esHoy
+          ? "bg-emerald-500 text-black font-bold scale-105"
+          : "bg-zinc-800 hover:bg-zinc-700"}
       `
 
-      btn.innerText = i <= 31 ? i : ""
+      day.innerText = fecha.getDate()
 
-      calendar.appendChild(btn)
+      calendar.appendChild(day)
     }
+
+    const calcularBtn =
+      document.getElementById("calcularBtn")
+
+    const resultado =
+      document.getElementById("resultado")
+
+    const sueldo =
+      document.getElementById("sueldo")
+
+    calcularBtn.addEventListener("click", () => {
+      calcularBtn.innerText = "Calculando..."
+
+      setTimeout(() => {
+        resultado.classList.remove("hidden")
+
+        sueldo.innerText = "$1.842.000"
+
+        calcularBtn.innerText = "Calcular sueldo"
+      }, 1000)
+    })
   </script>
 
 </body>
