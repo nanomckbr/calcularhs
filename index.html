@@ -41,7 +41,6 @@
 
   <main class="max-w-md mx-auto px-4 py-6">
 
-    <!-- HEADER -->
     <header class="mb-6">
       <h1 class="text-4xl font-bold tracking-tight">
         Control de Horas
@@ -52,7 +51,6 @@
       </p>
     </header>
 
-    <!-- CALENDARIO -->
     <section class="bg-zinc-900 border border-zinc-800 rounded-[30px] p-5 mb-5">
 
       <div class="flex items-center justify-between mb-5">
@@ -74,14 +72,12 @@
 
       </div>
 
-      <!-- LABELS -->
       <div
         id="diasSemana"
         class="grid grid-cols-7 gap-2 mb-3"
       >
       </div>
 
-      <!-- CALENDAR -->
       <div
         id="calendar"
         class="grid grid-cols-7 gap-2"
@@ -90,7 +86,6 @@
 
     </section>
 
-    <!-- TURNO -->
     <section class="bg-zinc-900 border border-zinc-800 rounded-[30px] p-5 mb-5">
 
       <p class="text-zinc-400 uppercase tracking-wide text-sm mb-4">
@@ -125,7 +120,6 @@
 
     </section>
 
-    <!-- VARIABLES -->
     <section
       id="variablesContainer"
       class="
@@ -172,7 +166,6 @@
 
     </section>
 
-    <!-- RESULTADO -->
     <section
       id="resultado"
       class="
@@ -253,11 +246,14 @@
       calendar.innerHTML = ""
 
       let labels
+      let diasTrabajados
 
       if (turno === "noche") {
         labels = ["D", "L", "M", "X", "J", "V", "S"]
+        diasTrabajados = 6
       } else {
         labels = ["L", "M", "X", "J", "V", "S", "D"]
+        diasTrabajados = 6
       }
 
       let inicioSemana = new Date(hoy)
@@ -317,6 +313,8 @@
         const esHoy =
           fecha.toDateString() === hoy.toDateString()
 
+        const esTrabajado = i < diasTrabajados
+
         const btn =
           document.createElement("button")
 
@@ -330,7 +328,9 @@
           text-lg
           ${esHoy
             ? "bg-emerald-500 text-black font-bold scale-105"
-            : "bg-zinc-800 hover:bg-zinc-700"}
+            : esTrabajado
+              ? "bg-zinc-800 hover:bg-zinc-700"
+              : "bg-zinc-950 text-zinc-600 border border-zinc-800"}
         `
 
         btn.innerText =
@@ -342,7 +342,7 @@
 
       variablesSemana.innerHTML = ""
 
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < diasTrabajados; i++) {
 
         const fecha =
           new Date(inicioSemana)
@@ -383,6 +383,23 @@
             </div>
 
           </div>
+
+          <button
+            class="
+              w-full
+              bg-zinc-900
+              hover:bg-zinc-950
+              border
+              border-zinc-700
+              rounded-xl
+              p-3
+              transition
+              mb-4
+              font-medium
+            "
+          >
+            Cargar horas
+          </button>
 
           <div class="space-y-4">
 
@@ -455,7 +472,7 @@
                 transition
               "
             >
-              ⭐ Marcar feriado
+              ⭐ Marcar feriado (8h)
             </button>
 
           </div>
@@ -479,12 +496,12 @@
           ) {
 
             btn.innerText =
-              "⭐ Feriado aplicado (8h)"
+              "⭐ Feriado aplicado"
 
           } else {
 
             btn.innerText =
-              "⭐ Marcar feriado"
+              "⭐ Marcar feriado (8h)"
 
           }
 
@@ -522,9 +539,6 @@
       renderSemana(turno)
 
     })
-
-    const calcularBtn =
-      document.getElementById("calcularBtn")
 
     const resultado =
       document.getElementById("resultado")
