@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control de Turnos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-zinc-950 text-white p-6">
+
+  <div class="max-w-4xl mx-auto">
+
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold tracking-tight">
+        Control de Turnos
+      </h1>
+
+      <p class="text-zinc-400 mt-2">
+        Gestión laboral y liquidación mensual
+      </p>
+    </header>
+
+    <!-- Liquidación actual -->
+    <section class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 mb-6">
+      <div class="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <p class="text-zinc-400 text-sm">
+            Liquidación actual
+          </p>
+
+          <h2 id="periodo" class="text-2xl font-semibold mt-1">
+            -
+          </h2>
+        </div>
+
+        <div class="text-right">
+          <p class="text-zinc-400 text-sm">
+            Bruto estimado
+          </p>
+
+          <p class="text-3xl font-bold text-emerald-400">
+            $0
+          </p>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="mt-6">
+        <div class="w-full h-3 bg-zinc-800 rounded-full overflow-hidden">
+          <div class="h-full w-[45%] bg-emerald-500 rounded-full"></div>
+        </div>
+
+        <p class="text-sm text-zinc-500 mt-2">
+          45% del período completado
+        </p>
+      </div>
+    </section>
+
+    <!-- Resumen -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
+        <p class="text-zinc-400 text-sm">Horas normales</p>
+        <h3 class="text-3xl font-bold mt-2">0h</h3>
+      </div>
+
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
+        <p class="text-zinc-400 text-sm">Horas nocturnas</p>
+        <h3 class="text-3xl font-bold mt-2">0h</h3>
+      </div>
+
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
+        <p class="text-zinc-400 text-sm">Horas extra</p>
+        <h3 class="text-3xl font-bold mt-2">0h</h3>
+      </div>
+
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
+        <p class="text-zinc-400 text-sm">Feriados</p>
+        <h3 class="text-3xl font-bold mt-2">0</h3>
+      </div>
+
+    </section>
+
+    <!-- Acciones -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+
+      <button class="bg-sky-500 rounded-3xl p-6 hover:scale-[1.02] active:scale-[0.98] transition text-left">
+        <div class="text-4xl mb-4">🌅</div>
+        <h3 class="text-2xl font-bold">Turno Mañana</h3>
+      </button>
+
+      <button class="bg-orange-500 rounded-3xl p-6 hover:scale-[1.02] active:scale-[0.98] transition text-left">
+        <div class="text-4xl mb-4">🌇</div>
+        <h3 class="text-2xl font-bold">Turno Tarde</h3>
+      </button>
+
+      <button class="bg-violet-500 rounded-3xl p-6 hover:scale-[1.02] active:scale-[0.98] transition text-left">
+        <div class="text-4xl mb-4">🌙</div>
+        <h3 class="text-2xl font-bold">Turno Noche</h3>
+      </button>
+
+    </section>
+
+    <!-- Calendario -->
+    <section class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-semibold">
+          Calendario
+        </h3>
+
+        <button class="bg-zinc-800 hover:bg-zinc-700 transition px-4 py-2 rounded-xl">
+          Crear semana
+        </button>
+      </div>
+
+      <div class="grid grid-cols-7 gap-3" id="calendar">
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    const hoy = new Date()
+
+    const year = hoy.getFullYear()
+    const month = hoy.getMonth()
+
+    const inicio =
+      hoy.getDate() >= 21
+        ? new Date(year, month, 21)
+        : new Date(year, month - 1, 21)
+
+    const fin =
+      hoy.getDate() >= 21
+        ? new Date(year, month + 1, 20)
+        : new Date(year, month, 20)
+
+    document.getElementById("periodo").innerText =
+      inicio.toLocaleDateString("es-AR") +
+      " → " +
+      fin.toLocaleDateString("es-AR")
+
+    const dias = ["L", "M", "X", "J", "V", "S", "D"]
+    const calendar = document.getElementById("calendar")
+
+    dias.forEach((dia) => {
+      const el = document.createElement("div")
+      el.className = "text-center text-zinc-500 font-medium"
+      el.innerText = dia
+      calendar.appendChild(el)
+    })
+
+    for (let i = 1; i <= 35; i++) {
+      const btn = document.createElement("button")
+
+      btn.className = `
+        aspect-square
+        rounded-2xl
+        bg-zinc-800
+        hover:bg-zinc-700
+        transition
+        flex
+        items-center
+        justify-center
+        text-sm
+      `
+
+      btn.innerText = i <= 31 ? i : ""
+
+      calendar.appendChild(btn)
+    }
+  </script>
+
+</body>
+</html>
